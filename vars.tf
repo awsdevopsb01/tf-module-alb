@@ -1,6 +1,4 @@
-variable "name" {
-  default = "alb"
-}
+variable "name" {}
 variable "env" {}
 variable "tags" {}
 variable "allow_alb_cidr" {}
