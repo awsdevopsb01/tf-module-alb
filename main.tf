@@ -1,6 +1,6 @@
 resource "aws_security_group" "main" {
-  name        = "${var.name}-alb-${var.env}-sg"
-  description = "${var.name}-alb-${var.env}-sg"
+  name        = "${var.name}-${var.env}-sg"
+  description = "${var.name}-${var.env}-sg"
   vpc_id      = var.vpc_id
 
   ingress {
@@ -23,17 +23,17 @@ resource "aws_security_group" "main" {
 }
 
 resource "aws_lb" "alb" {
-  name               = "${var.name}-alb-${var.env}-alb"
+  name               = "${var.name}-${var.env}"
   internal           = var.internal
   load_balancer_type = "application"
   security_groups    = [aws_security_group.main.id]
   subnets            = var.subnets
 
 
-  tags = merge(var.tags, { Name = "${var.env}-${var.name}-alb" })
+  tags = merge(var.tags, { Name = "${var.env}-${var.name}" })
 }
 
-resource "aws_lb_listener" "front_end" {
+resource "aws_lb_listener" "main" {
   load_balancer_arn = aws_lb.alb.arn
   port              = "80"
   protocol          = "HTTP"
@@ -43,8 +43,8 @@ resource "aws_lb_listener" "front_end" {
 
     fixed_response {
       content_type = "text/plain"
-      message_body = "Fixed response content"
-      status_code  = "200"
+      message_body = "Unauthorized"
+      status_code  = "403"
     }
   }
 }
